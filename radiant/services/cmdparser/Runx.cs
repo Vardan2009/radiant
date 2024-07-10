@@ -65,7 +65,7 @@ namespace radiant.services.cmdparser
                             }
                             else
                             {
-                                throw new IndexOutOfRangeException($"runxArgs index out of bounds: {runxIndex}");
+                                throw new IndexOutOfRangeException($"Not enough arguments given!");
                             }
                         }
                         else

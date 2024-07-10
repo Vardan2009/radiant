@@ -1,4 +1,4 @@
-﻿// Radiant Encoding Util
+﻿// Radiant Encoding Utility
 
 public class EncodeUtil
 {

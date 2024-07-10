@@ -13,6 +13,7 @@ Main Kernel File
 using radiant.services.accountmgr;
 using radiant.services.cmdparser;
 using radiant.services.filesystem;
+using radiant.util;
 using System;
 using cSystem = Cosmos.System;
 
@@ -34,6 +35,9 @@ namespace radiant
 
         protected override void BeforeRun()
         {
+#pragma warning disable CA1416 // Validate platform compatibility
+            Console.CursorSize = 100;
+#pragma warning restore CA1416 // Validate platform compatibility
             Filesystem.Init();
             Filesystem.CreateNecessarySystemFiles();
             AccountManager.InitAccount();
@@ -61,8 +65,6 @@ namespace radiant
 
         protected override void Run()
         {
-            Console.CursorSize = 100;
-
             try
             {
                 while (true)
@@ -75,7 +77,7 @@ namespace radiant
             catch (Exception e)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"FATAL ERROR: {e.Message}");
+                ConsoleUtil.Message(ConsoleUtil.MessageType.ERR, $"FATAL: {e.Message}\nPlease report this issue at our GitHub Repository `https://github.com/Vardan2009/radiant/issues`. Thank you!");
                 Console.ForegroundColor = ConsoleColor.White;
             }
         }

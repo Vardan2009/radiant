@@ -35,18 +35,18 @@ namespace radiant.services.accountmgr
                 {
                     if (acc.PasswordEncrypted == pass)
                     {
-                        Console.WriteLine($"Welcome, {name}!");
+                        ConsoleUtil.Message(ConsoleUtil.MessageType.SUCCESS, $"Welcome, {name}!");
                         Kernel.user = acc;
                         break;
                     }
                     else
                     {
-                        Console.WriteLine("Wrong Password");
+                        ConsoleUtil.Message(ConsoleUtil.MessageType.ERR, "Wrong password");
                     }
                 }
                 else
                 {
-                    Console.WriteLine("No such account");
+                    ConsoleUtil.Message(ConsoleUtil.MessageType.ERR, "No such account");
                 }
             }
         }
@@ -55,7 +55,7 @@ namespace radiant.services.accountmgr
         {
             if (Kernel.user == null) return;
             Kernel.user = null;
-            Console.WriteLine("Logged out");
+            ConsoleUtil.Message(ConsoleUtil.MessageType.INFO, "Logged out");
             LogIn();
         }
 
@@ -66,21 +66,22 @@ namespace radiant.services.accountmgr
                 string name = InputUtil.ValidRead(allowExit ? "New Account Username (`exit` to exit prompt) -> " : "New Account Username -> ");
                 if (name == "exit" && allowExit)
                     break;
-                string pass = InputUtil.PasswordRead("New Account Password -> ");
+
                 if (GetAccount(name) != null)
                 {
-                    Console.WriteLine("Account already exists!");
+                    ConsoleUtil.Message(ConsoleUtil.MessageType.ERR, "Account already exists");
+                    continue;
                 }
-                else
+
+                string pass = InputUtil.PasswordRead("New Account Password -> ");
+
+                Directory.CreateDirectory($@"0:\radiant\users\{name}");
+                Byte[] defconfig = new UTF8Encoding(true).GetBytes(pass);
+                using (FileStream fs = File.Create($@"0:\radiant\users\{name}\pass.private"))
                 {
-                    Directory.CreateDirectory($@"0:\radiant\users\{name}");
-                    Byte[] defconfig = new UTF8Encoding(true).GetBytes(pass);
-                    using (FileStream fs = File.Create($@"0:\radiant\users\{name}\pass.private"))
-                    {
-                        fs.Write(defconfig, 0, defconfig.Length);
-                    }
-                    break;
+                    fs.Write(defconfig, 0, defconfig.Length);
                 }
+                break;
             }
         }
 
@@ -88,7 +89,7 @@ namespace radiant.services.accountmgr
         {
             if (Filesystem.GetListing(@"0:\radiant\users").Count == 0)
             {
-                Console.WriteLine("No Accounts found!");
+                ConsoleUtil.Message(ConsoleUtil.MessageType.WARN, "No accounts found, creating one");
                 CreateAcc();
             }
             LogIn();

@@ -1,6 +1,7 @@
 ﻿using Cosmos.System.FileSystem;
 using Cosmos.System.FileSystem.Listing;
 using Cosmos.System.FileSystem.VFS;
+using radiant.util;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -29,7 +30,7 @@ namespace radiant.services.filesystem
         {
             if (path.EndsWith(".private"))
             {
-                Console.WriteLine("Access denied");
+                ConsoleUtil.Message(ConsoleUtil.MessageType.ERR, "Access denied");
                 return "";
             }
             return File.ReadAllText(FindPathRoot(path));
@@ -39,7 +40,7 @@ namespace radiant.services.filesystem
         {
             if (path.EndsWith(".private"))
             {
-                Console.WriteLine("Access denied");
+                ConsoleUtil.Message(ConsoleUtil.MessageType.ERR, "Access denied");
                 return;
             }
             File.Create(FindPathRoot(path));
@@ -57,7 +58,7 @@ namespace radiant.services.filesystem
         {
             if (path.EndsWith(".private"))
             {
-                Console.WriteLine("Access denied");
+                ConsoleUtil.Message(ConsoleUtil.MessageType.ERR, "Access denied");
                 return;
             }
             File.WriteAllText(FindPathRoot(path), contents);

@@ -1,6 +1,7 @@
 ﻿using Cosmos.System.FileSystem.Listing;
 using radiant.services.accountmgr;
 using radiant.services.filesystem;
+using radiant.util;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -58,7 +59,7 @@ namespace radiant.services.cmdparser
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error executing command: {ex.Message}");
+                    ConsoleUtil.Message(ConsoleUtil.MessageType.ERR, $"Error executing command: {ex.Message}");
                 }
             }
             else
@@ -69,7 +70,7 @@ namespace radiant.services.cmdparser
                 else if (File.Exists(filePath + ".runx"))
                     Runx.Do(filePath + ".runx", args);
                 else
-                    Console.WriteLine("No such command or executable");
+                    ConsoleUtil.Message(ConsoleUtil.MessageType.ERR, $"{args[0]} is not a known command or executable");
             }
         }
     }
@@ -96,7 +97,7 @@ namespace radiant.services.cmdparser
         {
             if (args.Length < 2)
             {
-                Console.WriteLine("Usage: echo <message>");
+                ConsoleUtil.Message(ConsoleUtil.MessageType.INFO, "Usage: echo <message>");
                 return;
             }
             for (int i = 1; i < args.Length; i++)
@@ -116,7 +117,7 @@ namespace radiant.services.cmdparser
         {
             if (args.Length != 1)
             {
-                Console.WriteLine("`useradd` takes no arguments");
+                ConsoleUtil.Message(ConsoleUtil.MessageType.INFO, "`useradd` takes no arguments");
                 return;
             }
             AccountManager.CreateAcc(true);
@@ -132,7 +133,7 @@ namespace radiant.services.cmdparser
         {
             if (args.Length != 1)
             {
-                Console.WriteLine("`clear` takes no arguments");
+                ConsoleUtil.Message(ConsoleUtil.MessageType.INFO, "`clear` takes no arguments");
                 return;
             }
             Console.Clear();
@@ -148,7 +149,7 @@ namespace radiant.services.cmdparser
         {
             if (args.Length != 1)
             {
-                Console.WriteLine("`logout` takes no arguments");
+                ConsoleUtil.Message(ConsoleUtil.MessageType.INFO, "`logout` takes no arguments");
                 return;
             }
             AccountManager.LogOut();
@@ -241,7 +242,7 @@ namespace radiant.services.cmdparser
             }
             catch
             {
-                Console.WriteLine("Failed to change directory!");
+                ConsoleUtil.Message(ConsoleUtil.MessageType.ERR, "Failed to change directory!");
                 Kernel.PWD = oldpwd;
             }
         }
@@ -272,7 +273,7 @@ namespace radiant.services.cmdparser
         {
             if (args.Length < 2)
             {
-                Console.WriteLine("Usage: touch <path>");
+                ConsoleUtil.Message(ConsoleUtil.MessageType.INFO, "Usage: touch <path>");
                 return;
             }
             Filesystem.CreateFile(args[1]);
