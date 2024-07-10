@@ -274,11 +274,11 @@ namespace radiant.services.cmdparser
                 return;
             }
             string allText = "";
-            Console.WriteLine("File write start, write `$EOL` to exit");
+            Console.WriteLine("File write start, write `$EOF` to exit");
             while (true)
             {
                 string line = Console.ReadLine();
-                if (line == "$EOL") break;
+                if (line == "$EOF") break;
                 allText += '\n';
                 allText += line;
             }
