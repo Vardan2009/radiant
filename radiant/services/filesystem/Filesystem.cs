@@ -35,6 +35,32 @@ namespace radiant.services.filesystem
                 return File.ReadAllText(Path.Join(Kernel.PWD, path));
         }
 
+        public static void CreateFile(string path)
+        {
+            if (path.EndsWith(".private"))
+            {
+                Console.WriteLine("Access denied");
+                return;
+            }
+            if (Path.IsPathRooted(path))
+                File.Create(path);
+            else
+                File.Create(Path.Join(Kernel.PWD, path));
+        }
+
+        public static void WriteFile(string path, string contents)
+        {
+            if (path.EndsWith(".private"))
+            {
+                Console.WriteLine("Access denied");
+                return;
+            }
+            if (Path.IsPathRooted(path))
+                File.WriteAllText(path, contents);
+            else
+                File.WriteAllText(Path.Join(Kernel.PWD, path), contents);
+        }
+
         public static void CreateNecessarySystemFiles()
         {
             string directoryPath = @"0:\radiant";

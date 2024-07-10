@@ -22,6 +22,8 @@ namespace radiant.services.cmdparser
             RegisterCommand(new CatCommand());
             RegisterCommand(new LogoutCommand());
             RegisterCommand(new UseraddCommand());
+            RegisterCommand(new WriteCommand());
+            RegisterCommand(new TouchCommand());
         }
 
         public static void RegisterCommand(Command command)
@@ -33,6 +35,8 @@ namespace radiant.services.cmdparser
         {
             if (string.IsNullOrWhiteSpace(cmd))
                 return;
+
+            if (cmd.Trim().StartsWith("//")) return;
 
             string[] args = cmd.Split(' ', StringSplitOptions.RemoveEmptyEntries);
             if (args.Length == 0)
@@ -238,6 +242,47 @@ namespace radiant.services.cmdparser
                 return;
             }
             Console.WriteLine(Filesystem.ReadFile(args[1]));
+        }
+    }
+
+    public class TouchCommand : Command
+    {
+        public override string[] Alias => new string[] { "touch", "create", "new" };
+        public override string Help => "Creates new file";
+
+        public override void Execute(string[] args)
+        {
+            if (args.Length < 2)
+            {
+                Console.WriteLine("Usage: touch <path>");
+                return;
+            }
+            Filesystem.CreateFile(args[1]);
+        }
+    }
+
+    public class WriteCommand : Command
+    {
+        public override string[] Alias => new string[] { "write", "fwrite", "fprint" };
+        public override string Help => "Writes to a file or overwrites it";
+
+        public override void Execute(string[] args)
+        {
+            if (args.Length < 2)
+            {
+                Console.WriteLine("Usage: write <path>");
+                return;
+            }
+            string allText = "";
+            Console.WriteLine("File write start, write `$EOL` to exit");
+            while (true)
+            {
+                string line = Console.ReadLine();
+                if (line == "$EOL") break;
+                allText += '\n';
+                allText += line;
+            }
+            Filesystem.WriteFile(args[1], allText);
         }
     }
 }
