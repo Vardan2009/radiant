@@ -17,6 +17,7 @@ namespace radiant.services.cmdparser
             RegisterCommand(new HelpCommand());
             RegisterCommand(new DirCommand());
             RegisterCommand(new ChdirCommand());
+            RegisterCommand(new CatCommand());
         }
 
         public static void RegisterCommand(Command command)
@@ -102,8 +103,8 @@ namespace radiant.services.cmdparser
 
         public override void Execute(string[] args)
         {
-            List<DirectoryEntry> entries = Filesystem.GetListing(Kernel.pwd);
-            Console.WriteLine($"Listing of {Kernel.pwd}");
+            List<DirectoryEntry> entries = Filesystem.GetListing(Kernel.PWD);
+            Console.WriteLine($"Listing of {Kernel.PWD}");
             foreach (var entry in entries)
             {
                 switch (entry.mEntryType)
@@ -137,29 +138,29 @@ namespace radiant.services.cmdparser
                 Console.WriteLine("Usage: cd <path>");
                 return;
             }
-            string oldpwd = Kernel.pwd;
+            string oldpwd = Kernel.PWD;
             try
             {
                 if (Path.IsPathRooted(args[1]))
                 {
-                    Kernel.pwd = args[1];
+                    Kernel.PWD = args[1];
                 }
                 else
                 {
                     if (args[1] == "..")
                     {
-                        DirectoryInfo parent = Directory.GetParent(Kernel.pwd);
+                        DirectoryInfo parent = Directory.GetParent(Kernel.PWD);
                         if (parent != null)
-                            Kernel.pwd = parent.FullName;
+                            Kernel.PWD = parent.FullName;
                     }
                     else if (args[1] == ".") { }
                     else
                     {
-                        Kernel.pwd = Path.Join(Kernel.pwd, args[1]);
+                        Kernel.PWD = Path.Join(Kernel.PWD, args[1]);
                     }
                 }
 
-                if (!Directory.Exists(Kernel.pwd))
+                if (!Directory.Exists(Kernel.PWD))
                 {
                     throw new Exception("No such path");
                 }
@@ -167,8 +168,24 @@ namespace radiant.services.cmdparser
             catch
             {
                 Console.WriteLine("Failed to change directory!");
-                Kernel.pwd = oldpwd;
+                Kernel.PWD = oldpwd;
             }
+        }
+    }
+
+    public class CatCommand : Command
+    {
+        public override string[] Alias => new string[] { "cat", "read", "fread" };
+        public override string Help => "Reads file contents";
+
+        public override void Execute(string[] args)
+        {
+            if (args.Length < 2)
+            {
+                Console.WriteLine("Usage: cat <path>");
+                return;
+            }
+            Console.WriteLine(Filesystem.ReadFile(args[1]));
         }
     }
 }

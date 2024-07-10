@@ -20,7 +20,15 @@ namespace radiant
 {
     public class Kernel : cSystem.Kernel
     {
-        public static string pwd = @"0:\";
+        static string pwd;
+        public static string PWD
+        {
+            get { return pwd; }
+            set
+            {
+                pwd = value.Replace("/", "\\");
+            }
+        }
         public static RadiantConfig config = RadiantConfig.DefaultConfig;
         public static Account user;
 
