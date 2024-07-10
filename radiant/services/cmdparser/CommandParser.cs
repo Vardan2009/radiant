@@ -1,4 +1,5 @@
 ﻿using Cosmos.System.FileSystem.Listing;
+using radiant.services.accountmgr;
 using radiant.services.filesystem;
 using System;
 using System.Collections.Generic;
@@ -18,6 +19,8 @@ namespace radiant.services.cmdparser
             RegisterCommand(new DirCommand());
             RegisterCommand(new ChdirCommand());
             RegisterCommand(new CatCommand());
+            RegisterCommand(new LogoutCommand());
+            RegisterCommand(new UseraddCommand());
         }
 
         public static void RegisterCommand(Command command)
@@ -78,6 +81,38 @@ namespace radiant.services.cmdparser
                 Console.Write($"{args[i]} ");
             }
             Console.WriteLine();
+        }
+    }
+
+    public class UseraddCommand : Command
+    {
+        public override string[] Alias => new string[] { "useradd" };
+        public override string Help => "Displays a prompt for creating a new user";
+
+        public override void Execute(string[] args)
+        {
+            if (args.Length != 1)
+            {
+                Console.WriteLine("`useradd` takes no arguments");
+                return;
+            }
+            AccountManager.CreateAcc(true);
+        }
+    }
+
+    public class LogoutCommand : Command
+    {
+        public override string[] Alias => new string[] { "logout", "exit" };
+        public override string Help => "Logs out current user";
+
+        public override void Execute(string[] args)
+        {
+            if (args.Length != 1)
+            {
+                Console.WriteLine("`logout` takes no arguments");
+                return;
+            }
+            AccountManager.LogOut();
         }
     }
 

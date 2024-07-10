@@ -20,7 +20,7 @@ namespace radiant
 {
     public class Kernel : cSystem.Kernel
     {
-        static string pwd;
+        static string pwd = @"0:\";
         public static string PWD
         {
             get { return pwd; }

@@ -51,11 +51,21 @@ namespace radiant.services.accountmgr
             }
         }
 
-        public static void CreateAcc()
+        public static void LogOut()
+        {
+            if (Kernel.user == null) return;
+            Kernel.user = null;
+            Console.WriteLine("Logged out");
+            LogIn();
+        }
+
+        public static void CreateAcc(bool allowExit = false)
         {
             while (true)
             {
-                string name = InputUtil.ValidRead("New Account Username -> ");
+                string name = InputUtil.ValidRead(allowExit ? "New Account Username (`exit` to exit prompt) -> " : "New Account Username -> ");
+                if (name == "exit" && allowExit)
+                    break;
                 string pass = InputUtil.PasswordRead("New Account Password -> ");
                 if (GetAccount(name) != null)
                 {
@@ -72,7 +82,6 @@ namespace radiant.services.accountmgr
                     break;
                 }
             }
-
         }
 
         public static void InitAccount()
@@ -84,5 +93,6 @@ namespace radiant.services.accountmgr
             }
             LogIn();
         }
+
     }
 }
