@@ -15,6 +15,7 @@ namespace radiant.services.cmdparser
         static CommandParser()
         {
             RegisterCommand(new EchoCommand());
+            RegisterCommand(new ClearCommand());
             RegisterCommand(new HelpCommand());
             RegisterCommand(new DirCommand());
             RegisterCommand(new ChdirCommand());
@@ -97,6 +98,22 @@ namespace radiant.services.cmdparser
                 return;
             }
             AccountManager.CreateAcc(true);
+        }
+    }
+
+    public class ClearCommand : Command
+    {
+        public override string[] Alias => new string[] { "cls", "clr", "clear" };
+        public override string Help => "Clears screen";
+
+        public override void Execute(string[] args)
+        {
+            if (args.Length != 1)
+            {
+                Console.WriteLine("`clear` takes no arguments");
+                return;
+            }
+            Console.Clear();
         }
     }
 
