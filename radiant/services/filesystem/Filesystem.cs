@@ -28,11 +28,11 @@ namespace radiant.services.filesystem
         public static string ReadFile(string path)
         {
             if (path.EndsWith(".private"))
+            {
+                Console.WriteLine("Access denied");
                 return "";
-            if (Path.IsPathRooted(path))
-                return File.ReadAllText(path);
-            else
-                return File.ReadAllText(Path.Join(Kernel.PWD, path));
+            }
+            return File.ReadAllText(FindPathRoot(path));
         }
 
         public static void CreateFile(string path)
@@ -42,10 +42,15 @@ namespace radiant.services.filesystem
                 Console.WriteLine("Access denied");
                 return;
             }
+            File.Create(FindPathRoot(path));
+        }
+
+        public static string FindPathRoot(string path)
+        {
             if (Path.IsPathRooted(path))
-                File.Create(path);
+                return path;
             else
-                File.Create(Path.Join(Kernel.PWD, path));
+                return Path.Join(Kernel.PWD, path);
         }
 
         public static void WriteFile(string path, string contents)
@@ -55,10 +60,7 @@ namespace radiant.services.filesystem
                 Console.WriteLine("Access denied");
                 return;
             }
-            if (Path.IsPathRooted(path))
-                File.WriteAllText(path, contents);
-            else
-                File.WriteAllText(Path.Join(Kernel.PWD, path), contents);
+            File.WriteAllText(FindPathRoot(path), contents);
         }
 
         public static void CreateNecessarySystemFiles()

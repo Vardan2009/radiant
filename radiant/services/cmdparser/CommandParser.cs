@@ -31,7 +31,7 @@ namespace radiant.services.cmdparser
             _commands.Add(command);
         }
 
-        public static void ParseCommand(string cmd)
+        public static void ParseCommand(string cmd, bool runx = false, string[] runxArgs = null)
         {
             if (string.IsNullOrWhiteSpace(cmd))
                 return;
@@ -47,7 +47,14 @@ namespace radiant.services.cmdparser
             {
                 try
                 {
-                    command.Execute(args);
+                    if (runx)
+                    {
+                        command.ExecuteRunx(args, runxArgs);
+                    }
+                    else
+                    {
+                        command.Execute(args);
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -56,7 +63,13 @@ namespace radiant.services.cmdparser
             }
             else
             {
-                Console.WriteLine("No such command");
+                string filePath = Filesystem.FindPathRoot(args[0]);
+                if (File.Exists(filePath))
+                    Runx.Do(filePath, args);
+                else if (File.Exists(filePath + ".runx"))
+                    Runx.Do(filePath + ".runx", args);
+                else
+                    Console.WriteLine("No such command or executable");
             }
         }
     }
@@ -66,6 +79,11 @@ namespace radiant.services.cmdparser
         public abstract string[] Alias { get; }
         public abstract string Help { get; }
         public abstract void Execute(string[] args);
+
+        public void ExecuteRunx(string[] args, string[] runxArgs)
+        {
+            Execute(Runx.ParseArgumentReferences(args, runxArgs));
+        }
     }
 
     // COMMAND DEFINITIONS
@@ -279,8 +297,7 @@ namespace radiant.services.cmdparser
             {
                 string line = Console.ReadLine();
                 if (line == "$EOF") break;
-                allText += '\n';
-                allText += line;
+                allText += line + '\n';
             }
             Filesystem.WriteFile(args[1], allText);
         }
