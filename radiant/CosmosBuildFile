@@ -1,0 +1,6 @@
+[radiant]
+cosmosProjectFile = radiant.csproj
+cliBuildVersion = v1.3.1
+buildLocation = ISO/
+buildISOName = radiant
+runProfile = VMWare
