@@ -1,6 +1,8 @@
 ﻿using Cosmos.System.FileSystem.Listing;
+using Cosmos.System.Network.Config;
 using radiant.services.accountmgr;
 using radiant.services.filesystem;
+using radiant.services.networking;
 using radiant.util;
 using System;
 using System.Collections.Generic;
@@ -31,6 +33,9 @@ namespace radiant.services.cmdparser
             RegisterCommand(new CreateDirCommand());
             RegisterCommand(new RemoveCommand());
             RegisterCommand(new RemoveDirCommand());
+            RegisterCommand(new NetConnectCommand());
+            RegisterCommand(new NetRequestCommand());
+            RegisterCommand(new NetConfigCommand());
         }
 
         public static void RegisterCommand(Command command)
@@ -425,6 +430,52 @@ namespace radiant.services.cmdparser
                     ConsoleUtil.Message(ConsoleUtil.MessageType.INFO, "disk: invalid arguments, use `disk help` for help");
                     break;
             }
+        }
+    }
+
+    public class NetConnectCommand : Command
+    {
+        public override string[] Alias => new string[] { "netconnect" };
+        public override string Help => "Connect to network";
+
+        public override void Execute(string[] args)
+        {
+            if (args.Length != 1)
+            {
+                ConsoleUtil.Message(ConsoleUtil.MessageType.INFO, "`netconnect` takes no arguments");
+                return;
+            }
+            NetManager.ConnectToNetwork();
+        }
+    }
+
+    public class NetRequestCommand : Command
+    {
+        public override string[] Alias => new string[] { "netrequest" };
+        public override string Help => "Send an HTTP/1.1 Request to URL";
+
+        public override void Execute(string[] args)
+        {
+            if (args.Length < 2)
+            {
+                ConsoleUtil.Message(ConsoleUtil.MessageType.INFO, "Usage: netrequest <url> <timeout=10000>");
+                return;
+            }
+            NetManager.Request(args[1], args.Length > 2 ? Convert.ToInt32(args[2]) : 10000);
+        }
+    }
+
+    public class NetConfigCommand : Command
+    {
+        public override string[] Alias => new string[] { "netconfig" };
+        public override string Help => "Get IP config";
+
+        public override void Execute(string[] args)
+        {
+            while (NetworkConfiguration.CurrentAddress.ToString() == "") ;
+            Console.WriteLine($"IP              -> {NetworkConfiguration.CurrentAddress}");
+            //Console.WriteLine($"Default Gateway -> {NetworkConfiguration.CurrentNetworkConfig.IPConfig.DefaultGateway}");
+            //Console.WriteLine($"Subnet Mask     -> {NetworkConfiguration.CurrentNetworkConfig.IPConfig.SubnetMask}");
         }
     }
 }
