@@ -72,7 +72,7 @@ namespace radiant.services.filesystem
                 return;
             }
             string rootedPath = FindPathRoot(path);
-            if (path.StartsWith(@"0:\radiant"))
+            if (rootedPath.StartsWith(@"0:\radiant"))
             {
                 ConsoleUtil.Message(ConsoleUtil.MessageType.ERR, "Access denied");
                 return;
@@ -83,7 +83,7 @@ namespace radiant.services.filesystem
         public static void RemoveFolder(string path, bool recursive)
         {
             string rootedPath = FindPathRoot(path);
-            if (path.StartsWith(@"0:\radiant"))
+            if (rootedPath.StartsWith(@"0:\radiant"))
             {
                 ConsoleUtil.Message(ConsoleUtil.MessageType.ERR, "Access denied");
                 return;
