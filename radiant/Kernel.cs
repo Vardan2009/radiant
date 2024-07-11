@@ -45,6 +45,7 @@ namespace radiant
             Console.Write("Setup Radiant? (this will create folders to 0:\\) (y/N) -> ");
             if (Console.ReadKey().KeyChar == 'y')
             {
+                Console.WriteLine();
                 Filesystem.CreateNecessarySystemFiles();
                 AccountManager.InitAccount();
                 config = RadiantConfig.ReadConfig(@"0:\radiant\config.cfg");
