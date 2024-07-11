@@ -75,7 +75,11 @@ namespace radiant.services.networking
                 webAddress += urlAddress[i];
             }
 
-            string httpget = "GET " + "/" + " HTTP/1.1\r\n" +
+            if (webAddress == "") webAddress = "/";
+
+            ConsoleUtil.Message(ConsoleUtil.MessageType.INFO, $"Web address -> {webAddress}");
+
+            string httpget = "GET " + webAddress + " HTTP/1.1\r\n" +
                          "Accept: */*\r\n" +
                          "Accept-Encoding: identity\r\n" +
                         $"Host: {main}\r\n" +
