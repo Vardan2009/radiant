@@ -418,7 +418,7 @@ namespace radiant.services.cmdparser
                     break;
                 case "mount":
                     ConsoleUtil.Message(ConsoleUtil.MessageType.WARN, "Experimental command");
-                    Filesystem.fs.GetDisks()[Convert.ToInt32(args[2])].Mount();
+                    Filesystem.MountDisk(Convert.ToInt32(args[2]));
                     ConsoleUtil.Message(ConsoleUtil.MessageType.SUCCESS, $"Mounted disk {args[2]}");
                     break;
                 default:
