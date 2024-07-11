@@ -12,7 +12,7 @@ namespace radiant.services.filesystem
 {
     public class Filesystem
     {
-        static CosmosVFS fs;
+        public static CosmosVFS fs;
 
         public static void Init()
         {
@@ -64,6 +64,59 @@ namespace radiant.services.filesystem
             File.WriteAllText(FindPathRoot(path), contents);
         }
 
+        public static void RemoveFile(string path)
+        {
+            if (path.EndsWith(".private"))
+            {
+                ConsoleUtil.Message(ConsoleUtil.MessageType.ERR, "Access denied");
+                return;
+            }
+            string rootedPath = FindPathRoot(path);
+            if (path.StartsWith(@"0:\radiant"))
+            {
+                ConsoleUtil.Message(ConsoleUtil.MessageType.ERR, "Access denied");
+                return;
+            }
+            File.Delete(rootedPath);
+        }
+
+        public static void RemoveFolder(string path, bool recursive)
+        {
+            string rootedPath = FindPathRoot(path);
+            if (path.StartsWith(@"0:\radiant"))
+            {
+                ConsoleUtil.Message(ConsoleUtil.MessageType.ERR, "Access denied");
+                return;
+            }
+            Directory.Delete(rootedPath, recursive);
+        }
+
+        public static void CreateFolder(string path)
+        {
+            Directory.CreateDirectory(FindPathRoot(path));
+        }
+
+        public static void CopyFile(string path1, string path2)
+        {
+            if (path1.EndsWith(".private") || path2.EndsWith(".private"))
+            {
+                ConsoleUtil.Message(ConsoleUtil.MessageType.ERR, "Access denied");
+                return;
+            }
+            File.Copy(FindPathRoot(path1), FindPathRoot(path2));
+        }
+
+        public static void MoveFile(string path1, string path2)
+        {
+            if (path1.EndsWith(".private") || path2.EndsWith(".private"))
+            {
+                ConsoleUtil.Message(ConsoleUtil.MessageType.ERR, "Access denied");
+                return;
+            }
+            ConsoleUtil.Message(ConsoleUtil.MessageType.ERR, "Not Implemented");
+            // File.Move(FindPathRoot(path1), FindPathRoot(path2));
+        }
+
         public static void CreateNecessarySystemFiles()
         {
             string directoryPath = @"0:\radiant";
@@ -83,6 +136,32 @@ namespace radiant.services.filesystem
                 {
                     fs.Write(defconfig, 0, defconfig.Length);
                 }
+            }
+        }
+
+        public static DriveInfo[] GetDisks()
+        {
+            try
+            {
+                return DriveInfo.GetDrives();
+            }
+            catch (Exception e)
+            {
+                ConsoleUtil.Message(ConsoleUtil.MessageType.ERR, $"Error Listing Disks: {e.Message}");
+                return Array.Empty<DriveInfo>();
+            }
+        }
+
+        public static DriveInfo GetDisk(int index)
+        {
+            try
+            {
+                return DriveInfo.GetDrives()[1];
+            }
+            catch (Exception e)
+            {
+                ConsoleUtil.Message(ConsoleUtil.MessageType.ERR, $"Error Listing Disks: {e.Message}");
+                return null;
             }
         }
     }

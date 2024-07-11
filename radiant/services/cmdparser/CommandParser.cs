@@ -25,6 +25,12 @@ namespace radiant.services.cmdparser
             RegisterCommand(new UseraddCommand());
             RegisterCommand(new WriteCommand());
             RegisterCommand(new TouchCommand());
+            RegisterCommand(new DiskCommand());
+            RegisterCommand(new MoveCommand());
+            RegisterCommand(new CopyCommand());
+            RegisterCommand(new CreateDirCommand());
+            RegisterCommand(new RemoveCommand());
+            RegisterCommand(new RemoveDirCommand());
         }
 
         public static void RegisterCommand(Command command)
@@ -210,7 +216,7 @@ namespace radiant.services.cmdparser
         {
             if (args.Length < 2)
             {
-                Console.WriteLine("Usage: cd <path>");
+                ConsoleUtil.Message(ConsoleUtil.MessageType.INFO, "Usage: cd <path>");
                 return;
             }
             string oldpwd = Kernel.PWD;
@@ -257,7 +263,7 @@ namespace radiant.services.cmdparser
         {
             if (args.Length < 2)
             {
-                Console.WriteLine("Usage: cat <path>");
+                ConsoleUtil.Message(ConsoleUtil.MessageType.INFO, "Usage: cat <path>");
                 return;
             }
             Console.WriteLine(Filesystem.ReadFile(args[1]));
@@ -266,7 +272,7 @@ namespace radiant.services.cmdparser
 
     public class TouchCommand : Command
     {
-        public override string[] Alias => new string[] { "touch", "create", "new" };
+        public override string[] Alias => new string[] { "touch", "create", "new", "mk" };
         public override string Help => "Creates new file";
 
         public override void Execute(string[] args)
@@ -280,6 +286,86 @@ namespace radiant.services.cmdparser
         }
     }
 
+    public class RemoveCommand : Command
+    {
+        public override string[] Alias => new string[] { "rm" };
+        public override string Help => "Removes file";
+
+        public override void Execute(string[] args)
+        {
+            if (args.Length < 2)
+            {
+                ConsoleUtil.Message(ConsoleUtil.MessageType.INFO, "Usage: rm <path>");
+                return;
+            }
+            Filesystem.RemoveFile(args[1]);
+        }
+    }
+
+    public class RemoveDirCommand : Command
+    {
+        public override string[] Alias => new string[] { "rmdir" };
+        public override string Help => "removes directory";
+
+        public override void Execute(string[] args)
+        {
+            if (args.Length < 2)
+            {
+                ConsoleUtil.Message(ConsoleUtil.MessageType.INFO, "Usage: rmdir <path>");
+                return;
+            }
+            Filesystem.RemoveFolder(args[1], args.Length > 2 && args[2] == "-r");
+        }
+    }
+
+    public class CopyCommand : Command
+    {
+        public override string[] Alias => new string[] { "cp", "copy" };
+        public override string Help => "Copies file";
+
+        public override void Execute(string[] args)
+        {
+            if (args.Length < 3)
+            {
+                ConsoleUtil.Message(ConsoleUtil.MessageType.INFO, "Usage: cp <path1> <path2>");
+                return;
+            }
+            Filesystem.CopyFile(args[1], args[2]);
+        }
+    }
+
+    public class MoveCommand : Command
+    {
+        public override string[] Alias => new string[] { "mv", "move" };
+        public override string Help => "Moves file";
+
+        public override void Execute(string[] args)
+        {
+            if (args.Length < 3)
+            {
+                ConsoleUtil.Message(ConsoleUtil.MessageType.INFO, "Usage: mv <path1> <path2>");
+                return;
+            }
+            Filesystem.MoveFile(args[1], args[2]);
+        }
+    }
+
+    public class CreateDirCommand : Command
+    {
+        public override string[] Alias => new string[] { "mkdir" };
+        public override string Help => "removes directory";
+
+        public override void Execute(string[] args)
+        {
+            if (args.Length < 2)
+            {
+                ConsoleUtil.Message(ConsoleUtil.MessageType.INFO, "Usage: mkdir <path>");
+                return;
+            }
+            Filesystem.CreateFolder(args[1]);
+        }
+    }
+
     public class WriteCommand : Command
     {
         public override string[] Alias => new string[] { "write", "fwrite", "fprint" };
@@ -289,11 +375,11 @@ namespace radiant.services.cmdparser
         {
             if (args.Length < 2)
             {
-                Console.WriteLine("Usage: write <path>");
+                ConsoleUtil.Message(ConsoleUtil.MessageType.INFO, "Usage: write <path>");
                 return;
             }
             string allText = "";
-            Console.WriteLine("File write start, write `$EOF` to exit");
+            ConsoleUtil.Message(ConsoleUtil.MessageType.INFO, "File write start, write `$EOF` to exit");
             while (true)
             {
                 string line = Console.ReadLine();
@@ -301,6 +387,44 @@ namespace radiant.services.cmdparser
                 allText += line + '\n';
             }
             Filesystem.WriteFile(args[1], allText);
+        }
+    }
+
+    public class DiskCommand : Command
+    {
+        public override string[] Alias => new string[] { "disk" };
+        public override string Help => "Disk Utility";
+
+        public override void Execute(string[] args)
+        {
+            if (args.Length == 1)
+            {
+                ConsoleUtil.Message(ConsoleUtil.MessageType.INFO, "disk: invalid arguments, use `disk help` for help");
+                return;
+            }
+            switch (args[1])
+            {
+                case "help":
+                    Console.WriteLine("--- Actions ---");
+                    Console.WriteLine("> list          -> List all available disks");
+                    Console.WriteLine("> mount [index] -> Mount a disk with index");
+                    break;
+                case "list":
+                    DriveInfo[] disks = Filesystem.GetDisks();
+                    for (int i = 0; i < disks.Length; i++)
+                    {
+                        Console.WriteLine($"Disk {i}\n    -> Name: {disks[i].Name}\n    -> Volume Label: {disks[i].VolumeLabel}\n    -> Size: {disks[i].TotalSize}\n    -> Format: {disks[i].DriveFormat}");
+                    }
+                    break;
+                case "mount":
+                    ConsoleUtil.Message(ConsoleUtil.MessageType.WARN, "Experimental command");
+                    Filesystem.fs.GetDisks()[Convert.ToInt32(args[2])].Mount();
+                    ConsoleUtil.Message(ConsoleUtil.MessageType.SUCCESS, $"Mounted disk {args[2]}");
+                    break;
+                default:
+                    ConsoleUtil.Message(ConsoleUtil.MessageType.INFO, "disk: invalid arguments, use `disk help` for help");
+                    break;
+            }
         }
     }
 }

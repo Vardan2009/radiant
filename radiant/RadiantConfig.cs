@@ -1,5 +1,6 @@
 ﻿// Class for `radiant/.config` file
 
+using radiant.util;
 using System;
 using System.IO;
 
@@ -35,7 +36,7 @@ namespace radiant
             }
             catch
             {
-                Console.WriteLine("Failed to read config file!");
+                ConsoleUtil.Message(ConsoleUtil.MessageType.ERR, "Failed to read config file!");
                 return DefaultConfig;
             }
         }
