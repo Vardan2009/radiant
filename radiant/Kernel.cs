@@ -38,11 +38,18 @@ namespace radiant
 #pragma warning disable CA1416 // Validate platform compatibility
             Console.CursorSize = 100;
 #pragma warning restore CA1416 // Validate platform compatibility
-            Filesystem.Init();
-            Filesystem.CreateNecessarySystemFiles();
-            AccountManager.InitAccount();
-            config = RadiantConfig.ReadConfig(@"0:\radiant\config.cfg");
-
+            Console.Write("Try initializing Filesystem? (y/N) -> ");
+            if (Console.ReadKey().KeyChar == 'y')
+                Filesystem.Init();
+            Console.WriteLine();
+            Console.Write("Setup Radiant? (this will create folders to 0:\\) (y/N) -> ");
+            if (Console.ReadKey().KeyChar == 'y')
+            {
+                Filesystem.CreateNecessarySystemFiles();
+                AccountManager.InitAccount();
+                config = RadiantConfig.ReadConfig(@"0:\radiant\config.cfg");
+            }
+            Console.WriteLine();
             Console.Beep();
             Console.ForegroundColor = ConsoleColor.Magenta;
             Console.WriteLine(GlobalData.commandLineLogo);
@@ -53,7 +60,10 @@ namespace radiant
         public void CommandLine()
         {
             Console.ForegroundColor = ConsoleColor.Blue;
-            Console.Write(user.Name);
+            if (user != null)
+                Console.Write(user.Name);
+            else
+                Console.Write("developer");
             Console.ForegroundColor = ConsoleColor.Gray;
             Console.Write("@");
             Console.ForegroundColor = ConsoleColor.Green;
