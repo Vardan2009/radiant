@@ -58,5 +58,24 @@ namespace radiant.util
             Console.BackgroundColor = cachedbg;
             Console.ForegroundColor = cachedfg;
         }
+
+        public static void WriteBigText(string text, string bottomLine = "[RETURN -> SCROLL DOWN | ESC -> EXIT]")
+        {
+            string[] lines = text.Split('\n');
+            for (int i = 0; i < lines.Length; i++)
+            {
+                Console.WriteLine(lines[i]);
+                Console.Write(bottomLine);
+                ConsoleKey key = Console.ReadKey(true).Key;
+                Console.SetCursorPosition(0, Console.CursorTop);
+                for (int _ = 0; _ < bottomLine.Length; _++) Console.Write(' ');
+                Console.SetCursorPosition(0, Console.CursorTop);
+                switch (key)
+                {
+                    case ConsoleKey.Escape: return;
+                    default: continue;
+                }
+            }
+        }
     }
 }

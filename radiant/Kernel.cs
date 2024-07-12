@@ -56,6 +56,10 @@ namespace radiant
             Console.WriteLine(GlobalData.commandLineLogo);
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine($"Radiant {GlobalData.version}");
+            Console.WriteLine("Licensed under GPL-3");
+            Console.WriteLine("This program comes with ABSOLUTELY NO WARRANTY");
+            Console.WriteLine("This is free software, and you are welcome to\nredistribute it under certain conditions");
+            Console.WriteLine("Type `license` for more information\n");
         }
 
         public void CommandLine()
@@ -64,7 +68,7 @@ namespace radiant
             if (user != null)
                 Console.Write(user.Name);
             else
-                Console.Write("developer");
+                Console.Write("no-user");
             Console.ForegroundColor = ConsoleColor.Gray;
             Console.Write("@");
             Console.ForegroundColor = ConsoleColor.Green;
@@ -78,12 +82,9 @@ namespace radiant
         {
             try
             {
-                while (true)
-                {
-                    CommandLine();
-                    string command = Console.ReadLine();
-                    CommandParser.ParseCommand(command);
-                }
+                CommandLine();
+                string command = Console.ReadLine();
+                CommandParser.ParseCommand(command);
             }
             catch (Exception e)
             {

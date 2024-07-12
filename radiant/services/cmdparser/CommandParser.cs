@@ -36,6 +36,7 @@ namespace radiant.services.cmdparser
             RegisterCommand(new NetConnectCommand());
             RegisterCommand(new NetRequestCommand());
             RegisterCommand(new NetConfigCommand());
+            RegisterCommand(new LicenseCommand());
         }
 
         public static void RegisterCommand(Command command)
@@ -476,6 +477,17 @@ namespace radiant.services.cmdparser
             Console.WriteLine($"IP              -> {NetworkConfiguration.CurrentAddress}");
             //Console.WriteLine($"Default Gateway -> {NetworkConfiguration.CurrentNetworkConfig.IPConfig.DefaultGateway}");
             //Console.WriteLine($"Subnet Mask     -> {NetworkConfiguration.CurrentNetworkConfig.IPConfig.SubnetMask}");
+        }
+    }
+
+    public class LicenseCommand : Command
+    {
+        public override string[] Alias => new string[] { "license" };
+        public override string Help => "Show project license";
+
+        public override void Execute(string[] args)
+        {
+            ConsoleUtil.WriteBigText(License.license);
         }
     }
 }
