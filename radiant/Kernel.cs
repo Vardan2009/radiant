@@ -39,19 +39,21 @@ namespace radiant
             Console.CursorSize = 100;
 #pragma warning restore CA1416 // Validate platform compatibility
             Console.Write("Try initializing Filesystem? (y/N) -> ");
-            if (Console.ReadKey().KeyChar == 'y')
-                Filesystem.Init();
-            Console.WriteLine();
-            Console.Write("Setup Radiant? (this will create folders to 0:\\) (y/N) -> ");
-            if (Console.ReadKey().KeyChar == 'y')
+            bool initFilesystem = Console.ReadKey().KeyChar == 'y';
+            if (initFilesystem)
             {
+                Filesystem.Init();
                 Console.WriteLine();
-                Filesystem.CreateNecessarySystemFiles();
-                AccountManager.InitAccount();
-                config = RadiantConfig.ReadConfig(@"0:\radiant\config.cfg");
+                Console.Write("Use the account system and config file? (this will create files to 0:\\) (y/N) -> ");
+                if (Console.ReadKey().KeyChar == 'y')
+                {
+                    Console.WriteLine();
+                    Filesystem.CreateNecessarySystemFiles();
+                    AccountManager.InitAccount();
+                    config = RadiantConfig.ReadConfig(@"0:\radiant\config.cfg");
+                }
             }
             Console.WriteLine();
-            Console.Beep();
             Console.ForegroundColor = ConsoleColor.Magenta;
             Console.WriteLine(GlobalData.commandLineLogo);
             Console.ForegroundColor = ConsoleColor.White;
