@@ -18,12 +18,13 @@
 
 using radiant.services.filesystem;
 using System;
+using System.Collections.Generic;
 
 namespace radiant.services.cmdparser
 {
     public class Runx
     {
-        public static void Do(string path, string[] args)
+        public static void Do(string path, List<string> args)
         {
             string[] lines = Filesystem.ReadFile(path).Split('\n');
             foreach (string line in lines)
@@ -32,56 +33,72 @@ namespace radiant.services.cmdparser
             }
         }
 
-        public static string[] ParseArgumentReferences(string[] oldArgs, string[] runxArgs)
+        public static Dictionary<string, string> ParseKwargReferences(Dictionary<string, string> oldKwargs, List<string> runxArgs)
         {
-            string[] parsedArgs = new string[oldArgs.Length];
-            oldArgs.CopyTo(parsedArgs, 0);
+            Dictionary<string, string> parsedKwargs = new(oldKwargs);
 
-            for (int argidx = 0; argidx < parsedArgs.Length; argidx++)
+            foreach (string key in parsedKwargs.Keys)
             {
-                string result = "";
-                int i = 0;
+                parsedKwargs[key] = ParseArgumentReference(parsedKwargs[key], runxArgs);
+            }
 
-                while (i < parsedArgs[argidx].Length)
+            return parsedKwargs;
+        }
+
+        public static string ParseArgumentReference(string oldArg, List<string> runxArgs)
+        {
+            string result = "";
+            int i = 0;
+
+            while (i < oldArg.Length)
+            {
+                if (oldArg[i] == '%' && i + 1 < oldArg.Length && Char.IsDigit(oldArg[i + 1]))
                 {
-                    if (parsedArgs[argidx][i] == '%' && i + 1 < parsedArgs[argidx].Length && Char.IsDigit(parsedArgs[argidx][i + 1]))
+                    int j = i + 1;
+                    string refIdx = "";
+
+                    while (j < oldArg.Length && Char.IsDigit(oldArg[j]))
                     {
-                        int j = i + 1;
-                        string refIdx = "";
+                        refIdx += oldArg[j];
+                        j++;
+                    }
 
-                        while (j < parsedArgs[argidx].Length && Char.IsDigit(parsedArgs[argidx][j]))
+                    if (j < oldArg.Length && oldArg[j] == '%')
+                    {
+                        int runxIndex = Convert.ToInt32(refIdx);
+                        if (runxIndex >= 0 && runxIndex < runxArgs.Count)
                         {
-                            refIdx += parsedArgs[argidx][j];
-                            j++;
-                        }
-
-                        if (j < parsedArgs[argidx].Length && parsedArgs[argidx][j] == '%')
-                        {
-                            int runxIndex = Convert.ToInt32(refIdx);
-                            if (runxIndex >= 0 && runxIndex < runxArgs.Length)
-                            {
-                                result += runxArgs[runxIndex];
-                                i = j + 1;
-                            }
-                            else
-                            {
-                                throw new IndexOutOfRangeException($"Not enough arguments given!");
-                            }
+                            result += runxArgs[runxIndex];
+                            i = j + 1;
                         }
                         else
                         {
-                            result += parsedArgs[argidx][i];
-                            i++;
+                            throw new IndexOutOfRangeException($"Not enough arguments given!");
                         }
                     }
                     else
                     {
-                        result += parsedArgs[argidx][i];
+                        result += oldArg[i];
                         i++;
                     }
                 }
+                else
+                {
+                    result += oldArg[i];
+                    i++;
+                }
+            }
 
-                parsedArgs[argidx] = result;
+            return result;
+        }
+
+        public static List<string> ParseArgumentReferences(List<string> oldArgs, List<string> runxArgs)
+        {
+            List<string> parsedArgs = new(oldArgs);
+
+            for (int argidx = 0; argidx < parsedArgs.Count; argidx++)
+            {
+                parsedArgs[argidx] = ParseArgumentReference(parsedArgs[argidx], runxArgs);
             }
 
             return parsedArgs;

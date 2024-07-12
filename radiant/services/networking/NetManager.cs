@@ -40,7 +40,7 @@ namespace radiant.services.networking
             Connected = true;
         }
 
-        public static void Request(string url, int timeout = 5000)
+        public static string[] Request(string url, int timeout)
         {
             if (!Connected)
             {
@@ -48,7 +48,7 @@ namespace radiant.services.networking
                 ConnectToNetwork();
             }
 
-            if (!Connected) return;
+            if (!Connected) return Array.Empty<string>();
 
             string main = url.Split('/')[0];
 
@@ -77,33 +77,27 @@ namespace radiant.services.networking
 
             if (webAddress == "") webAddress = "/";
 
-            ConsoleUtil.Message(ConsoleUtil.MessageType.INFO, $"Web address -> {webAddress}");
+            ConsoleUtil.Message(ConsoleUtil.MessageType.INFO, $"Path -> {webAddress}");
 
-            string httpget = "GET " + webAddress + " HTTP/1.1\r\n" +
-                         "Accept: */*\r\n" +
-                         "Accept-Encoding: identity\r\n" +
-                        $"Host: {main}\r\n" +
-                         "Connection: Keep-Alive\r\n\r\n";
+            string getRequestString = "GET " + webAddress + " HTTP/1.1\r\n" +
+                                     "Accept: */*\r\n" +
+                                     "Accept-Encoding: identity\r\n" +
+                                    $"Host: {main}\r\n" +
+                                     "Connection: Keep-Alive\r\n\r\n";
 
-            string messageToSend = httpget;
-            byte[] dataToSend = Encoding.ASCII.GetBytes(messageToSend);
-            stream.Write(dataToSend, 0, dataToSend.Length);
+            string messageToSend = getRequestString;
+            byte[] requestBytes = Encoding.ASCII.GetBytes(messageToSend);
+            stream.Write(requestBytes, 0, requestBytes.Length);
 
             byte[] receivedData = new byte[client.ReceiveBufferSize];
             int bytesRead = stream.Read(receivedData, 0, receivedData.Length);
-            string receivedMessage = Encoding.ASCII.GetString(receivedData, 0, bytesRead);
+            string responce = Encoding.ASCII.GetString(receivedData, 0, bytesRead);
 
-            string[] responseParts = receivedMessage.Split(new[] { "\r\n\r\n" }, 2, StringSplitOptions.None);
-
-            if (responseParts.Length == 2)
-            {
-                string headers = responseParts[0];
-                string content = responseParts[1];
-                Console.WriteLine(headers);
-                Console.WriteLine(content);
-            }
+            string[] responceSplit = responce.Split(new[] { "\r\n\r\n" }, 2, StringSplitOptions.None);
 
             stream.Close();
+
+            return responceSplit;
         }
     }
 }
