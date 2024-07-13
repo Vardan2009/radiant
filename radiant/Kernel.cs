@@ -7,6 +7,7 @@
 /_/ |_|\__,_/\__,_/_/\__,_/_/ /_/\__/  
                                        
 Main Kernel File
+Licensed under GPL-3
 =================================================================
 */
 
@@ -44,7 +45,7 @@ namespace radiant
             {
                 Filesystem.Init();
                 Console.WriteLine();
-                Console.Write("Use the account system and config file? (this will create files to 0:\\) (y/N) -> ");
+                Console.Write("Read/Write radiant files? (this will create files to 0:\\) (y/N) -> ");
                 if (Console.ReadKey().KeyChar == 'y')
                 {
                     Console.WriteLine();

@@ -9,7 +9,7 @@ namespace radiant.services.cmdparser
 {
     public class CommandParser
     {
-        public static readonly List<Command> _commands = new List<Command>();
+        public static readonly List<Command> _commands = new();
 
         static CommandParser()
         {
@@ -31,6 +31,8 @@ namespace radiant.services.cmdparser
             RegisterCommand(new commands.sysutil.ClearCommand());
 
             RegisterCommand(new commands.sysinfo.LicenseCommand());
+            RegisterCommand(new commands.sysinfo.VerCommand());
+            RegisterCommand(new commands.sysinfo.FetchCommand());
 
             RegisterCommand(new commands.usrmgmt.LogoutCommand());
             RegisterCommand(new commands.usrmgmt.UseraddCommand());

@@ -153,5 +153,20 @@ namespace radiant.services.filesystem
                 return null;
             }
         }
+
+        public static long GetFreeSpaceOnDisk(int index)
+        {
+            return fs.GetAvailableFreeSpace(@$"{index}:\");
+        }
+
+        public static long GetAllSpaceOnDisk(int index)
+        {
+            return fs.GetTotalSize(@$"{index}:\");
+        }
+
+        public static long GetFreePercentOnDisk(int index)
+        {
+            return GetFreePercentOnDisk(index) / GetAllSpaceOnDisk(index);
+        }
     }
 }

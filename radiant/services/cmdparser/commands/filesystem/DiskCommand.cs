@@ -13,7 +13,7 @@ namespace radiant.services.cmdparser.commands.filesystem
 
         public override void Execute(List<string> args, Dictionary<string, string> kwargs)
         {
-            if (args.Count != 1)
+            if (args.Count != 1 || kwargs.Count != 1)
             {
                 ConsoleUtil.Message(ConsoleUtil.MessageType.INFO, "disk: invalid arguments, use `disk --help` for help");
                 return;
