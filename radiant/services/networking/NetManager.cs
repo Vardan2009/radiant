@@ -42,6 +42,7 @@ namespace radiant.services.networking
 
         public static string[] Request(string url, int timeout)
         {
+            ConsoleUtil.Message(ConsoleUtil.MessageType.INFO, "Checking network connection...");
             if (!Connected)
             {
                 ConsoleUtil.Message(ConsoleUtil.MessageType.WARN, "Not connected to network, connecting...");
@@ -49,6 +50,10 @@ namespace radiant.services.networking
             }
 
             if (!Connected) return Array.Empty<string>();
+
+            while (NetworkConfiguration.CurrentAddress.ToString() == "") ;
+            ConsoleUtil.Message(ConsoleUtil.MessageType.INFO, "IP: " + NetworkConfiguration.CurrentAddress.ToString());
+            ConsoleUtil.Message(ConsoleUtil.MessageType.SUCCESS, "Network connection present!");
 
             string main = url.Split('/')[0];
 
