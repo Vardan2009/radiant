@@ -26,8 +26,8 @@ namespace radiant.services.graphics
             MouseManager.Y = h / 2;
             canvas = FullScreenCanvas.GetFullScreenCanvas(new Mode(w, h, ColorDepth.ColorDepth32));
             surface = new CGSSurface(canvas);
-            RegularFont = new TTFFont(EmbeddedResourceLoader.LoadEmbeddedResource("arial.ttf"));
-            TitleFont = new TTFFont(EmbeddedResourceLoader.LoadEmbeddedResource("arialblackitalic.ttf"));
+            RegularFont = new TTFFont(EmbeddedResourceLoader.LoadEmbeddedResource("FreeSans.ttf"));
+            TitleFont = new TTFFont(EmbeddedResourceLoader.LoadEmbeddedResource("FreeSansBoldOblique.ttf"));
             canvas.Clear(Color.Blue);
             while (true)
             {
@@ -46,8 +46,7 @@ namespace radiant.services.graphics
             b.Draw();
             canvas.DrawImageAlpha(cursor, (int)MouseManager.X, (int)MouseManager.Y, true);
 
-            TitleFont.DrawToSurface(surface, 30, 50, 130, "Hello, world!", Color.White);
-
+            TitleFont.DrawToSurface(surface, 30, 50, 130, "Hello, World!", Color.White);
             RegularFont.DrawToSurface(surface, 30, 50, 170, "Привет, мир!", Color.White);
 
             canvas.Display();

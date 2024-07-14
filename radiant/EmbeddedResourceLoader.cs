@@ -8,17 +8,17 @@ namespace radiant
         [ManifestResourceStream(ResourceName = "radiant.resource.cur.bmp")]
         static byte[] radiant_resource_cur_bmp;
 
-        [ManifestResourceStream(ResourceName = "radiant.resource.arial.ttf")]
-        static byte[] radiant_resource_arial_ttf;
+        [ManifestResourceStream(ResourceName = "radiant.resource.FreeSans.ttf")]
+        static byte[] radiant_resource_freesans_ttf;
 
-        [ManifestResourceStream(ResourceName = "radiant.resource.arialblackitalic.ttf")]
-        static byte[] radiant_resource_arialblackitalic_ttf;
+        [ManifestResourceStream(ResourceName = "radiant.resource.FreeSansBoldOblique.ttf")]
+        static byte[] radiant_resource_freesansboldoblique_ttf;
 
         static Dictionary<string, byte[]> resources = new Dictionary<string, byte[]>()
         {
             {"cur.bmp",radiant_resource_cur_bmp},
-            {"arial.ttf",radiant_resource_arial_ttf},
-            {"arialblackitalic.ttf",radiant_resource_arialblackitalic_ttf}
+            {"FreeSans.ttf",radiant_resource_freesans_ttf},
+            {"FreeSansBoldOblique.ttf",radiant_resource_freesansboldoblique_ttf}
         };
 
         public static byte[] LoadEmbeddedResource(string filename)

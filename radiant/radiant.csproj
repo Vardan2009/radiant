@@ -24,6 +24,8 @@
       <None Remove="resource\arial.ttf" />
       <None Remove="resource\arialblackitalic.ttf" />
       <None Remove="resource\cur.bmp" />
+      <None Remove="resource\FreeSans.ttf" />
+      <None Remove="resource\FreeSansBoldOblique.ttf" />
     </ItemGroup>
 
     <ItemGroup>
@@ -34,11 +36,11 @@
     </ItemGroup>
 
     <ItemGroup>
-      <EmbeddedResource Include="resource\arial.ttf" />
-      <EmbeddedResource Include="resource\arialblackitalic.ttf" />
       <EmbeddedResource Include="resource\cur.bmp">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </EmbeddedResource>
+      <EmbeddedResource Include="resource\FreeSans.ttf" />
+      <EmbeddedResource Include="resource\FreeSansBoldOblique.ttf" />
     </ItemGroup>
 
 </Project>
