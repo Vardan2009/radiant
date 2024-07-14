@@ -1,4 +1,6 @@
-﻿using Cosmos.System;
+﻿using Cosmos.Core.Memory;
+using Cosmos.HAL;
+using Cosmos.System;
 using Cosmos.System.Graphics;
 using radiant.services.graphics.controls;
 using radiant.util.CosmosTTF;
@@ -15,6 +17,11 @@ namespace radiant.services.graphics
 
         public static TTFFont RegularFont;
         public static TTFFont TitleFont;
+
+        static int frames = 0;
+        static int FPS = 0;
+        static int currentSecond = 0;
+        static int garbageCollected = 0;
 
         public static void Init(uint w = defaultScreenW, uint h = defaultScreenH)
         {
@@ -37,19 +44,34 @@ namespace radiant.services.graphics
 
         static readonly Image cursor = new Bitmap(EmbeddedResourceLoader.LoadEmbeddedResource("cur.bmp"));
 
-        static Button b = new Button(50, 50, 50, 25, "test");
+        static readonly Button b = new(50, 50, 50, 25, "test");
 
         static void Run()
         {
             canvas.Clear(Color.Black);
+
             b.Update();
             b.Draw();
+
             canvas.DrawImageAlpha(cursor, (int)MouseManager.X, (int)MouseManager.Y, true);
 
-            TitleFont.DrawToSurface(surface, 30, 50, 130, "Hello, World!", Color.White);
-            RegularFont.DrawToSurface(surface, 30, 50, 170, "Привет, мир!", Color.White);
+            RegularFont.DrawToSurface(surface, 10, 10, 10, $"--- DEBUG ---", Color.White);
+            RegularFont.DrawToSurface(surface, 10, 10, 26, $"FPS: {FPS}", Color.White);
+            RegularFont.DrawToSurface(surface, 10, 10, 42, $"Garbage Collected: {garbageCollected} objs", Color.White);
+            TitleFont.DrawToSurface(surface, 30, 130, 130, "Hello, World!", Color.White);
+            TitleFont.DrawToSurface(surface, 30, 130, 170, "Привет, мир!", Color.White);
 
             canvas.Display();
+            frames++;
+
+            if (RTC.Second != currentSecond)
+            {
+                currentSecond = RTC.Second;
+                FPS = frames;
+                frames = 0;
+            }
+
+            garbageCollected += Heap.Collect();
         }
     }
 }
