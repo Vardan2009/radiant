@@ -21,6 +21,8 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <None Remove="resource\arial.ttf" />
+      <None Remove="resource\arialblackitalic.ttf" />
       <None Remove="resource\cur.bmp" />
     </ItemGroup>
 
@@ -32,6 +34,8 @@
     </ItemGroup>
 
     <ItemGroup>
+      <EmbeddedResource Include="resource\arial.ttf" />
+      <EmbeddedResource Include="resource\arialblackitalic.ttf" />
       <EmbeddedResource Include="resource\cur.bmp">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </EmbeddedResource>
