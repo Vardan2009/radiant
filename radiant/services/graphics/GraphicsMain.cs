@@ -39,7 +39,9 @@ namespace radiant.services.graphics
             while (true)
             {
                 Run();
+                if (KeyboardManager.TryReadKey(out KeyEvent key) && key.Key == ConsoleKeyEx.Escape) break;
             }
+            canvas.Disable();
         }
 
         static readonly Image cursor = new Bitmap(EmbeddedResourceLoader.LoadEmbeddedResource("cur.bmp"));
@@ -58,6 +60,7 @@ namespace radiant.services.graphics
             RegularFont.DrawToSurface(surface, 10, 10, 10, $"--- DEBUG ---", Color.White);
             RegularFont.DrawToSurface(surface, 10, 10, 26, $"FPS: {FPS}", Color.White);
             RegularFont.DrawToSurface(surface, 10, 10, 42, $"Garbage Collected: {garbageCollected} objs", Color.White);
+            RegularFont.DrawToSurface(surface, 10, 10, 58, $"Press ESC to exit", Color.White);
             TitleFont.DrawToSurface(surface, 30, 130, 130, "Hello, World!", Color.White);
             TitleFont.DrawToSurface(surface, 30, 130, 170, "Привет, мир!", Color.White);
 
@@ -72,6 +75,7 @@ namespace radiant.services.graphics
             }
 
             garbageCollected += Heap.Collect();
+
         }
     }
 }
