@@ -29,6 +29,7 @@ namespace radiant.services.cmdparser
             RegisterCommand(new commands.filesystem.RemoveDirCommand());
 
             RegisterCommand(new commands.sysutil.ClearCommand());
+            RegisterCommand(new commands.sysutil.GraphicsCommand());
 
             RegisterCommand(new commands.sysinfo.LicenseCommand());
             RegisterCommand(new commands.sysinfo.VerCommand());
