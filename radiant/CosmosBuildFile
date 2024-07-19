@@ -1,5 +1,5 @@
 [radiant]
-cosmosProjectFile = radiant.csproj
+cosmosProjectFile = radiant.linux.csproj
 cliBuildVersion = v1.3.1
 buildLocation = ISO/
 buildISOName = radiant
