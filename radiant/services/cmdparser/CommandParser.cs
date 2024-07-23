@@ -38,9 +38,9 @@ namespace radiant.services.cmdparser
             RegisterCommand(new commands.usrmgmt.LogoutCommand());
             RegisterCommand(new commands.usrmgmt.UseraddCommand());
 
-            RegisterCommand(new commands.netmgmt.NetConnectCommand());
-            RegisterCommand(new commands.netmgmt.NetRequestCommand());
-            RegisterCommand(new commands.netmgmt.NetConfigCommand());
+            //RegisterCommand(new commands.netmgmt.NetConnectCommand());
+            //RegisterCommand(new commands.netmgmt.NetRequestCommand());
+            //RegisterCommand(new commands.netmgmt.NetConfigCommand());
         }
 
         public static void RegisterCommand(Command command)
