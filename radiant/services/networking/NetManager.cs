@@ -10,6 +10,23 @@ using System.Text;
 
 namespace radiant.services.networking
 {
+    public class NetRequest
+    {
+        public string Url { get; set; }
+        public string Method { get; set; } = "GET";
+        public int Timeout { get; set; } = 10000;
+        public string Headers { get; set; } = "";
+        public string Body { get; set; } = null;
+        public bool Verbose { get; set; } = false;
+    }
+
+    public class NetResponse
+    {
+        public int StatusCode { get; set; }
+        public string Headers { get; set; }
+        public string Body { get; set; }
+    }
+
     public class NetManager
     {
         public static bool Connected;
@@ -40,31 +57,31 @@ namespace radiant.services.networking
             Connected = true;
         }
 
-        public static string[] Request(string url, int timeout)
+        public static NetResponse SendRequest(NetRequest req)
         {
-            ConsoleUtil.Message(ConsoleUtil.MessageType.INFO, "Checking network connection...");
+            if (req.Verbose) ConsoleUtil.Message(ConsoleUtil.MessageType.INFO, "Checking network connection...");
             if (!Connected)
             {
-                ConsoleUtil.Message(ConsoleUtil.MessageType.WARN, "Not connected to network, connecting...");
+                if (req.Verbose) ConsoleUtil.Message(ConsoleUtil.MessageType.WARN, "Not connected to network, connecting...");
                 ConnectToNetwork();
             }
 
-            if (!Connected) return Array.Empty<string>();
+            if (!Connected) return new NetResponse();
 
             while (NetworkConfiguration.CurrentAddress.ToString() == "") ;
-            ConsoleUtil.Message(ConsoleUtil.MessageType.INFO, "IP: " + NetworkConfiguration.CurrentAddress.ToString());
-            ConsoleUtil.Message(ConsoleUtil.MessageType.SUCCESS, "Network connection present!");
+            if (req.Verbose) ConsoleUtil.Message(ConsoleUtil.MessageType.INFO, "IP: " + NetworkConfiguration.CurrentAddress.ToString());
+            if (req.Verbose) ConsoleUtil.Message(ConsoleUtil.MessageType.SUCCESS, "Network connection present!");
 
-            string main = url.Split('/')[0];
+            string host = req.Url.Split('/')[0];
 
-            ConsoleUtil.Message(ConsoleUtil.MessageType.INFO, $"Sending request to {main}...");
+            if (req.Verbose) ConsoleUtil.Message(ConsoleUtil.MessageType.INFO, $"Sending request to {host}...");
             using TcpClient client = new TcpClient();
             var dnsClient = new DnsClient();
 
             dnsClient.Connect(DNSConfig.DNSNameservers[0]);
-            dnsClient.SendAsk(main);
+            dnsClient.SendAsk(host);
 
-            Address address = dnsClient.Receive(timeout);
+            Address address = dnsClient.Receive(req.Timeout);
             dnsClient.Close();
             string serverIp = address.ToString();
             int serverPort = 80;
@@ -72,7 +89,7 @@ namespace radiant.services.networking
             client.Connect(serverIp, serverPort);
             NetworkStream stream = client.GetStream();
 
-            string[] urlAddress = url.Split('/');
+            string[] urlAddress = req.Url.Split('/');
             string webAddress = "";
             for (int i = 1; i < urlAddress.Length; i++)
             {
@@ -82,15 +99,22 @@ namespace radiant.services.networking
 
             if (webAddress == "") webAddress = "/";
 
-            ConsoleUtil.Message(ConsoleUtil.MessageType.INFO, $"Path -> {webAddress}");
+            if (req.Verbose) ConsoleUtil.Message(ConsoleUtil.MessageType.INFO, $"Path -> {webAddress}");
 
-            string getRequestString = "GET " + webAddress + " HTTP/1.1\r\n" +
+            string requestString = req.Method + " " + webAddress + " HTTP/1.1\r\n" +
                                      "Accept: */*\r\n" +
                                      "Accept-Encoding: identity\r\n" +
-                                    $"Host: {main}\r\n" +
-                                     "Connection: Keep-Alive\r\n\r\n";
+                                    $"Host: {host}\r\n" +
+                                     "Connection: Keep-Alive\r\n\r\n" +
+                                     req.Headers;
 
-            string messageToSend = getRequestString;
+            if (!string.IsNullOrEmpty(req.Body))
+            {
+                requestString += $"\r\nContent-Length: {Encoding.ASCII.GetByteCount(req.Body)}\r\n\r\n";
+                requestString += req.Body;
+            }
+
+            string messageToSend = requestString;
             byte[] requestBytes = Encoding.ASCII.GetBytes(messageToSend);
             stream.Write(requestBytes, 0, requestBytes.Length);
 
@@ -102,7 +126,26 @@ namespace radiant.services.networking
 
             stream.Close();
 
-            return responceSplit;
+            return new NetResponse()
+            {
+                Headers = responceSplit[0],
+                Body = responceSplit[1],
+                StatusCode = ParseStatusCode(responceSplit[0])
+            };
+        }
+
+        private static int ParseStatusCode(string headerPart)
+        {
+            var lines = headerPart.Split('\r', '\n');
+            if (lines.Length > 0)
+            {
+                var statusLine = lines[0].Split(' ');
+                if (statusLine.Length >= 3 && int.TryParse(statusLine[1], out int statusCode))
+                {
+                    return statusCode;
+                }
+            }
+            return 0;
         }
     }
 }
