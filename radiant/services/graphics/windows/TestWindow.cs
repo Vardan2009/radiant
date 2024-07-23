@@ -15,7 +15,9 @@ namespace radiant.services.graphics.windows
             countLabel = new(20, 55, $"Clicked the button {clickCount} times", Color.White);
             Button clickBtn = new(20, 90, 200, 40, "Click me!");
 
-            clickBtn.MouseClick += OnClickBtnClick;
+            // This causes compilation error
+            // temporarily commented out
+            // clickBtn.MouseClick += OnClickBtnClick;
 
             Controls.Add(welcomeLabel);
             Controls.Add(countLabel);

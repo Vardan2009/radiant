@@ -8,6 +8,9 @@ namespace radiant
         [ManifestResourceStream(ResourceName = "radiant.resource.cur.bmp")]
         static byte[] radiant_resource_cur_bmp;
 
+        [ManifestResourceStream(ResourceName = "radiant.resource.bg.bmp")]
+        static byte[] radiant_resource_bg_bmp;
+
         [ManifestResourceStream(ResourceName = "radiant.resource.FreeSans.ttf")]
         static byte[] radiant_resource_freesans_ttf;
 
@@ -17,6 +20,7 @@ namespace radiant
         static Dictionary<string, byte[]> resources = new Dictionary<string, byte[]>()
         {
             {"cur.bmp",radiant_resource_cur_bmp},
+            {"bg.bmp",radiant_resource_bg_bmp},
             {"FreeSans.ttf",radiant_resource_freesans_ttf},
             {"FreeSansBoldOblique.ttf",radiant_resource_freesansboldoblique_ttf}
         };

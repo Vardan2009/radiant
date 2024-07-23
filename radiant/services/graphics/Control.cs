@@ -10,6 +10,7 @@ namespace radiant.services.graphics
         private int _y;
         private int _width;
         private int _height;
+        private Window _parent;
 
         public int X
         {
@@ -33,6 +34,12 @@ namespace radiant.services.graphics
         {
             get => _height;
             set => _height = value;
+        }
+
+        public Window Parent
+        {
+            get => _parent;
+            set => _parent = value;
         }
 
         public event EventHandler<MouseEventArgs> MouseClick;

@@ -2,8 +2,8 @@
 using Cosmos.HAL;
 using Cosmos.System;
 using Cosmos.System.Graphics;
-using radiant.services.graphics.controls;
 using radiant.util.CosmosTTF;
+using System;
 using System.Drawing;
 
 namespace radiant.services.graphics
@@ -23,6 +23,19 @@ namespace radiant.services.graphics
         static int currentSecond = 0;
         static int garbageCollected = 0;
 
+        static readonly Image cursor = new Bitmap(EmbeddedResourceLoader.LoadEmbeddedResource("cur.bmp"));
+        static readonly Image bg = new Bitmap(EmbeddedResourceLoader.LoadEmbeddedResource("bg.bmp"));
+
+        static bool shouldDrawDebug = false;
+
+        static readonly Type[] allWindows = new Type[] {
+            typeof(windows.TestWindow)
+        };
+
+        // temporary code for testing
+        static readonly Window testWindow = new windows.TestWindow();
+        // ---
+
         public static void Init(uint w = defaultScreenW, uint h = defaultScreenH)
         {
             screenw = w;
@@ -35,6 +48,9 @@ namespace radiant.services.graphics
             surface = new CGSSurface(canvas);
             RegularFont = new TTFFont(EmbeddedResourceLoader.LoadEmbeddedResource("FreeSans.ttf"));
             TitleFont = new TTFFont(EmbeddedResourceLoader.LoadEmbeddedResource("FreeSansBoldOblique.ttf"));
+
+            testWindow.InitControls();
+
             canvas.Clear(Color.Blue);
             while (true)
             {
@@ -44,26 +60,28 @@ namespace radiant.services.graphics
             canvas.Disable();
         }
 
-        static readonly Image cursor = new Bitmap(EmbeddedResourceLoader.LoadEmbeddedResource("cur.bmp"));
-
-        static readonly Button b = new(50, 50, 50, 25, "test");
-
-        static void Run()
+        static void DrawDebug()
         {
-            canvas.Clear(Color.Black);
-
-            b.Update();
-            b.Draw();
-
-            canvas.DrawImageAlpha(cursor, (int)MouseManager.X, (int)MouseManager.Y, true);
-
+            canvas.DrawFilledRectangle(Color.FromArgb(128, Color.Black), 5, 5, 100, 60, true);
             RegularFont.DrawToSurface(surface, 10, 10, 10, $"--- DEBUG ---", Color.White);
             RegularFont.DrawToSurface(surface, 10, 10, 26, $"FPS: {FPS}", Color.White);
             RegularFont.DrawToSurface(surface, 10, 10, 42, $"Garbage Collected: {garbageCollected} objs", Color.White);
             RegularFont.DrawToSurface(surface, 10, 10, 58, $"Press ESC to exit", Color.White);
-            TitleFont.DrawToSurface(surface, 30, 130, 130, "Hello, World!", Color.White);
-            TitleFont.DrawToSurface(surface, 30, 130, 170, "Привет, мир!", Color.White);
+        }
 
+        static void Run()
+        {
+            canvas.Clear(Color.Black);
+            canvas.DrawImage(bg, 0, 0, true);
+
+            testWindow.Update();
+
+            if (KeyboardManager.TryReadKey(out KeyEvent key) && key.Key == ConsoleKeyEx.Tab) shouldDrawDebug = !shouldDrawDebug;
+
+            if (shouldDrawDebug)
+                DrawDebug();
+
+            canvas.DrawImageAlpha(cursor, (int)MouseManager.X, (int)MouseManager.Y, true);
             canvas.Display();
             frames++;
 

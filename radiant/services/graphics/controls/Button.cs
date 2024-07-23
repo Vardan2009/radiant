@@ -66,7 +66,7 @@ namespace radiant.services.graphics.controls
 
         public override void Draw()
         {
-            G.canvas.DrawFilledRectangle(Color, X, Y, Width, Height);
+            G.canvas.DrawFilledRectangle(Color, Parent.X + X, Parent.Y + Parent.TitleBarHeight + Y, Width, Height);
             int textX = X + (Width - G.RegularFont.CalculateWidth(Text, FontSize)) / 2;
             Rune.TryCreate('v', out Rune r);
             int textY = Y + (Height + (int)G.RegularFont.RenderGlyphAsBitmap(r, Color, FontSize).Value.bmp.Height) / 2;
