@@ -89,5 +89,9 @@
   </tr>
 </table>
 
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=Vardan2009/radiant&type=Date)](https://star-history.com/#Vardan2009/radiant&Date)
+
 </div>
 
