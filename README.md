@@ -1,7 +1,7 @@
 <div align="center">
 
 
-<img src="artwork/radiant.png" width="300">
+<img src="artwork/radiant.png" width="400">
 <h1>Radiant Operating System</h1>
 <img src="https://img.shields.io/github/contributors/Vardan2009/radiant?style=for-the-badge">
 <img src="https://img.shields.io/github/stars/eigerproject/eigerlang?style=for-the-badge">
@@ -18,13 +18,13 @@
         A powerful command parser with argument and keyword argument support
       </p>
     </td>
-    <td>
-      <img src="artwork/screenshots/0.png" width="300">
+    <td align="center">
+      <img src="artwork/screenshots/0.png" width="400">
     </td>
   </tr>
   <tr>
-    <td>
-      <img src="artwork/screenshots/1.png" width="300">
+    <td align="center">
+      <img src="artwork/screenshots/1.png" width="400">
     </td>
     <td>
        <h3>Filesystem</h3>
@@ -40,12 +40,12 @@
         User management system. Each user has its own unique username, password and working directory!
       </p>
     </td>
-    <td>
-      <img src="artwork/screenshots/2.png" width="300">
+    <td align="center">
+      <img src="artwork/screenshots/2.png" width="400">
     </td>
      <tr>
-    <td>
-      <img src="artwork/screenshots/5.png" width="300">
+    <td align="center">
+      <img src="artwork/screenshots/5.png" width="400">
     </td>
     <td>
        <h3>Custom Executables</h3>
@@ -56,8 +56,8 @@
   </tr>
   </tr>
     <tr>
-    <td>
-      <img src="artwork/screenshots/3.png" width="300">
+    <td align="center">
+      <img src="artwork/screenshots/3.png" width="400">
     </td>
     <td>
        <h3>Graphics</h3>
@@ -67,23 +67,23 @@
     </td>
 </table>
 <h2>Other Screenshots</h2>
-<img src="artwork/screenshots/4.png" width="300">
+<img src="artwork/screenshots/4.png" width="400">
 
 <h2>Contributors</h2>
 <table>
   <tr>
-    <td>
+    <td align="center">
       <img src="https://github.com/Vardan2009.png" width="100">
     </td>
-    <td>
+    <td align="center">
       <a href="https://github.com/Vardan2009">Vardan2009</a>
     </td>
   </tr>
    <tr>
-    <td>
+    <td align="center">
       <img src="https://github.com/gamma63.png" width="100">
     </td>
-    <td>
+    <td align="center">
       <a href="https://github.com/gamma63">gamma63</a>
     </td>
   </tr>
