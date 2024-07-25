@@ -1,7 +1,7 @@
 <div align="center">
 
 
-<img src="artwork/radiant.png" height="300">
+<img src="artwork/radiant.png" width="300">
 <h1>Radiant Operating System</h1>
 <img src="https://img.shields.io/github/contributors/Vardan2009/radiant?style=for-the-badge">
 <img src="https://img.shields.io/github/stars/eigerproject/eigerlang?style=for-the-badge">
@@ -19,12 +19,12 @@
       </p>
     </td>
     <td>
-      <img src="artwork/screenshots/0.png" height="300">
+      <img src="artwork/screenshots/0.png" width="300">
     </td>
   </tr>
   <tr>
     <td>
-      <img src="artwork/screenshots/1.png" height="300">
+      <img src="artwork/screenshots/1.png" width="300">
     </td>
     <td>
        <h3>Filesystem</h3>
@@ -41,11 +41,11 @@
       </p>
     </td>
     <td>
-      <img src="artwork/screenshots/2.png" height="300">
+      <img src="artwork/screenshots/2.png" width="300">
     </td>
      <tr>
     <td>
-      <img src="artwork/screenshots/5.png" height="300">
+      <img src="artwork/screenshots/5.png" width="300">
     </td>
     <td>
        <h3>Custom Executables</h3>
@@ -57,7 +57,7 @@
   </tr>
     <tr>
     <td>
-      <img src="artwork/screenshots/3.png" height="300">
+      <img src="artwork/screenshots/3.png" width="300">
     </td>
     <td>
        <h3>Graphics</h3>
@@ -67,7 +67,7 @@
     </td>
 </table>
 <h2>Other Screenshots</h2>
-<img src="artwork/screenshots/4.png" height="300">
+<img src="artwork/screenshots/4.png" width="300">
 
 <h2>Contributors</h2>
 <table>
