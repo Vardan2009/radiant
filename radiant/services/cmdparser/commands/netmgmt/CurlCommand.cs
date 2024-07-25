@@ -30,13 +30,17 @@ namespace radiant.services.cmdparser.commands.netmgmt
                 Verbose = kwargs.TryGetValue("v", out string verb)
             };
 
-            bool noPrintBody = kwargs.TryGetValue("no-print-body", out string nb);
-            bool printHeaders = kwargs.TryGetValue("i", out string nh);
+            bool noPrintBody = kwargs.TryGetValue("npb", out string nb);
+            bool printRaw = kwargs.TryGetValue("pr", out string nh);
+            bool printHeaders = kwargs.TryGetValue("i", out string pr);
 
             NetResponse res = NetManager.SendRequest(req);
 
             if (printHeaders)
                 Console.WriteLine($"{res.Headers}\n\n");
+
+            if (printRaw)
+                Console.WriteLine($"{res.RawResponce}\n\n");
 
             if (!noPrintBody)
                 Console.WriteLine($"{res.Body}\n");

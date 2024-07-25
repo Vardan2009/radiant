@@ -22,6 +22,7 @@ namespace radiant.services.networking
 
     public class NetResponse
     {
+        public string RawResponce { get; set; }
         public int StatusCode { get; set; }
         public string Headers { get; set; }
         public string Body { get; set; }
@@ -128,6 +129,7 @@ namespace radiant.services.networking
 
             return new NetResponse()
             {
+                RawResponce = responce,
                 Headers = responceSplit[0],
                 Body = responceSplit[1],
                 StatusCode = ParseStatusCode(responceSplit[0])
